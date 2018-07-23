@@ -42,11 +42,12 @@ for passwords in passwordList:
     session = SessionGoogle(url_login, url_auth, email, passwords)
     corr = session.get('http://classroom.google.com')
     corr = str(corr)
+    print(passwords)
     if passwords in corr[944:989]:
+        break
         
-        while True:
-            print('Access Granted')
-            print(passwords)
+print('Access Granted')
+print(passwords)
         
 
 
