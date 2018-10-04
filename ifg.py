@@ -10,7 +10,7 @@ import string
 
 def create_text():
     text = ''
-    for x in range(999): #CHANGE THIS NUMBER
+    for x in range(999):                              ##CHANGE THIS NUMBER
         text += random.choice(string.ascii_letters+string.digits)
     return text
 
